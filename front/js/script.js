@@ -21,7 +21,9 @@
 //   },
     const url = "http://localhost:3000/api/products";
 
-
+//--------------------------------------------------
+// Affichage produits
+//--------------------------------------------------
    fetch(url)
    .then(res => {
         if(res.ok){
@@ -46,6 +48,7 @@
             console.log("erreur de dialogue avec l'API.")
         }
    })
-   
+//    faire le catch (identique au else)
+//  mettre dans une fonction
 
 
