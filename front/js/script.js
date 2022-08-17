@@ -19,8 +19,10 @@
 //     "description": "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
 //     "altTxt": "Photo d'un canapé bleu, deux places"
 //   },
+    const url = "http://localhost:3000/api/products";
 
-   fetch('http://localhost:3000/api/products')
+
+   fetch(url)
    .then(res => {
         if(res.ok){
             console.log(res)
