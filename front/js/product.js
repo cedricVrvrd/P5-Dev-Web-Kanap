@@ -32,14 +32,16 @@ fetch(urlGlobale)
     const button = document.querySelector("#addToCart")
     
     button.addEventListener("click", function(){
-        const qtyValue = document.querySelector("#quantity").value;
+        const qty = parseInt(document.querySelector("#quantity").value);
         const couleur = document.querySelector("#colors").value;
         const choix = {
             id : idUrl,
-            qty : qtyValue,
+            qty : qty,
             couleur : couleur,
         }
         addBasket(choix)
+        console.log("le tye est " + typeof qty)
+        
     })
 
 //--------------------------------------------------
@@ -56,7 +58,8 @@ fetch(urlGlobale)
         let basket = localStorage.getItem('basket');
         if (basket == null) {
             return []
-        } else {
+        } 
+        else {
             return JSON.parse(basket)
         }
     }
@@ -66,6 +69,11 @@ fetch(urlGlobale)
 //--------------------------------------------------
 function addBasket(product){
     let basket = getBasket();
+    basket.forEach(object => {
+        if (object.couleur  === product.couleur && object.id === product.id) {
+            object.qty += product.qty;
+        }
+    })
     basket.push(product);
     saveBasket(basket);
 }
