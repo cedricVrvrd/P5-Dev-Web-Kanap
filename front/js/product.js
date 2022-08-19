@@ -43,16 +43,21 @@ button.addEventListener("click", function () {
     console.log("le tye est " + typeof qty)
 
 })
-
+//--------------------------------------------------
+// on recupére le panier, si il est vide on retourne un tableau, on push le produit dans tableau, on sauve.
+//--------------------------------------------------
 function addBasket(product) {
-    let basket = JSON.parse(localStorage.getItem('basket'));
+    let basket = JSON.parse(localStorage.getItem('basket')); 
     if (basket == null) {
         basket = [],
         basket.push(product)
         localStorage.setItem('basket', JSON.stringify(basket))
     }
+    //--------------------------------------------------
+    // si produit dans le panier, on tri le panier, si produit identiques = ajuste la quantirté, si pas de produit identique, on push
+    //--------------------------------------------------
     else {
-        basket.forEach(object => {
+        basket.find(object => {
             if (object.couleur === product.couleur && object.id === product.id) {
                 object.qty += product.qty;
             }
@@ -63,37 +68,3 @@ function addBasket(product) {
         localStorage.setItem('basket', JSON.stringify(basket))
     }
 }
-
-//--------------------------------------------------
-// On sauve le panier que l'on transform en JSON car localStorage ne traite pas les tableaux (sérialisation)
-//--------------------------------------------------
-//     function saveBasket(basket){
-//         localStorage.setItem('basket', JSON.stringify(basket));
-//     }
-
-// ///--------------------------------------------------
-// // RECUPERER LE PANIER, parse(retransform en données complexes)
-// //--------------------------------------------------
-//     function getBasket(){
-//         let basket = localStorage.getItem('basket');
-//         if (basket == null) {
-//             return []
-//         }
-//         else {
-//             return JSON.parse(basket)
-//         }
-//     }
-
-// ///--------------------------------------------------
-// // Ajout du panier
-// //--------------------------------------------------
-// function addBasket(product){
-//     let basket = getBasket();
-//     basket.forEach(object => {
-//         if (object.couleur  === product.couleur && object.id === product.id) {
-//             object.qty += product.qty;
-//         }
-//     })
-//     basket.push(product);
-//     saveBasket(basket);
-// }
