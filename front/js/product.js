@@ -29,51 +29,71 @@ fetch(urlGlobale)
         }
     })
 
-    const button = document.querySelector("#addToCart")
-    
-    button.addEventListener("click", function(){
-        const qty = parseInt(document.querySelector("#quantity").value);
-        const couleur = document.querySelector("#colors").value;
-        const choix = {
-            id : idUrl,
-            qty : qty,
-            couleur : couleur,
-        }
-        addBasket(choix)
-        console.log("le tye est " + typeof qty)
-        
-    })
+const button = document.querySelector("#addToCart")
+
+button.addEventListener("click", function () {
+    const qty = parseInt(document.querySelector("#quantity").value);
+    const couleur = document.querySelector("#colors").value;
+    const product = {
+        id: idUrl,
+        qty: qty,
+        couleur: couleur,
+    }
+    addBasket(product)
+    console.log("le tye est " + typeof qty)
+
+})
+
+function addBasket(product) {
+    let basket = JSON.parse(localStorage.getItem('basket'));
+    if (basket == null) {
+        basket = [],
+        basket.push(product)
+        localStorage.setItem('basket', JSON.stringify(basket))
+    }
+    else {
+        basket.forEach(object => {
+            if (object.couleur === product.couleur && object.id === product.id) {
+                object.qty += product.qty;
+            }
+            else {
+                basket.push(product)
+            }
+        })
+        localStorage.setItem('basket', JSON.stringify(basket))
+    }
+}
 
 //--------------------------------------------------
 // On sauve le panier que l'on transform en JSON car localStorage ne traite pas les tableaux (sérialisation)
 //--------------------------------------------------
-    function saveBasket(basket){
-        localStorage.setItem('basket', JSON.stringify(basket));
-    }
+//     function saveBasket(basket){
+//         localStorage.setItem('basket', JSON.stringify(basket));
+//     }
 
-///--------------------------------------------------
-// RECUPERER LE PANIER, parse(retransform en données complexes)
-//--------------------------------------------------
-    function getBasket(){
-        let basket = localStorage.getItem('basket');
-        if (basket == null) {
-            return []
-        } 
-        else {
-            return JSON.parse(basket)
-        }
-    }
+// ///--------------------------------------------------
+// // RECUPERER LE PANIER, parse(retransform en données complexes)
+// //--------------------------------------------------
+//     function getBasket(){
+//         let basket = localStorage.getItem('basket');
+//         if (basket == null) {
+//             return []
+//         }
+//         else {
+//             return JSON.parse(basket)
+//         }
+//     }
 
-///--------------------------------------------------
-// Ajout du panier
-//--------------------------------------------------
-function addBasket(product){
-    let basket = getBasket();
-    basket.forEach(object => {
-        if (object.couleur  === product.couleur && object.id === product.id) {
-            object.qty += product.qty;
-        }
-    })
-    basket.push(product);
-    saveBasket(basket);
-}
+// ///--------------------------------------------------
+// // Ajout du panier
+// //--------------------------------------------------
+// function addBasket(product){
+//     let basket = getBasket();
+//     basket.forEach(object => {
+//         if (object.couleur  === product.couleur && object.id === product.id) {
+//             object.qty += product.qty;
+//         }
+//     })
+//     basket.push(product);
+//     saveBasket(basket);
+// }
