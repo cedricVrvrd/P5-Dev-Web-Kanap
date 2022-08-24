@@ -47,7 +47,7 @@ button.addEventListener("click", function () {
 // on recupére le panier, si il est vide on retourne un tableau, on push le produit dans tableau, on sauve.
 //--------------------------------------------------
 function addBasket(product) {
-    let basket = JSON.parse(localStorage.getItem('basket')); 
+    let basket = JSON.parse(localStorage.getItem('basket'));
     if (basket == null) {
         basket = [],
         basket.push(product)
@@ -57,14 +57,14 @@ function addBasket(product) {
     // si produit dans le panier, on tri le panier, si produit identiques = ajuste la quantirté, si pas de produit identique, on push
     //--------------------------------------------------
     else {
-        basket.find(object => {
-            if (object.couleur === product.couleur && object.id === product.id) {
-                object.qty += product.qty;
-            }
-            else {
-                basket.push(product)
-            }
-        })
+        let _product = basket.find(p => p.id === product.id && p.couleur === product.couleur);
+        // console.log("62", _product);
+        if(_product){
+            _product.qty += product.qty
+        }
+        else{
+            basket.push(product)
+        }
         localStorage.setItem('basket', JSON.stringify(basket))
     }
 }
