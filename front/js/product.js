@@ -42,15 +42,17 @@ button.addEventListener("click", function () {
     addBasket(product)
     console.log("le tye est " + typeof qty)
 
-})
+});
 //--------------------------------------------------
 // on recupére le panier, si il est vide on retourne un tableau, on push le produit dans tableau, on sauve.
 //--------------------------------------------------
 function addBasket(product) {
     let basket = JSON.parse(localStorage.getItem('basket'));
     if (basket == null) {
-        basket = [],
-        basket.push(product)
+        basket = [];
+        if (product.qty !== 0 && product.couleur){
+            basket.push(product)
+        }
         localStorage.setItem('basket', JSON.stringify(basket))
     }
     //--------------------------------------------------
@@ -63,7 +65,9 @@ function addBasket(product) {
             _product.qty += product.qty
         }
         else{
-            basket.push(product)
+            if (product.qty !== 0 && product.couleur){
+                basket.push(product)
+            }
         }
         localStorage.setItem('basket', JSON.stringify(basket))
     }
