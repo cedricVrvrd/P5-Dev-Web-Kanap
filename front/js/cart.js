@@ -18,7 +18,6 @@ function getBasketBack() {
     console.log("18", basket)
     let items = document.querySelector("#cart_items");
     for (let index = 0; index < basket.length; index++) {
-        let itemBasket = basket[index];
         let id = basket[index].id;
         let qty = basket[index].qty;
         let couleur = basket[index].couleur;
@@ -56,6 +55,7 @@ function getBasketBack() {
         let h2CartItemContentDescription = document.createElement("h2");
         cartItemContentDescription.appendChild(h2CartItemContentDescription)
         h2CartItemContentDescription.textContent = dbProduct.name;
+
         let pCartItemsDecription = document.createElement("p");
         cartItemContentDescription.appendChild(pCartItemsDecription);
         pCartItemsDecription.textContent = couleur;
@@ -118,4 +118,49 @@ function deleteArticle() {
             
         })
     }
+}
+
+changeQuantity();
+
+function changeQuantity() {
+    let basket = getBasket();
+    const quantityButton = document.querySelectorAll('input.itemQuantity');
+    console.log("128", quantityButton)
+    for (let index = 0; index < quantityButton.length; index++) {
+        quantityButton[index].addEventListener("change", (event) =>{
+        console.log("130", event.target.value, basket[index]);
+        basket[index].qty = Number(event.target.value);
+        localStorage.setItem('basket', JSON.stringify(basket));
+        setInterval("location.reload()", 1000);
+        })
+        
+    }
+}
+getQuantity();  
+
+function getQuantity(){
+    let basket = getBasket();
+    let totalQuantity = document.querySelector("#totalQuantity");
+    let resultsQuantity = 0;
+    for (let index = 0; index < basket.length; index++) {
+        resultsQuantity += basket[index].qty;
+        console.log("150", resultsQuantity); 
+    }
+    totalQuantity.textContent += resultsQuantity;
+}
+
+getPrice();
+function getPrice(){
+    let basket = getBasket();
+    let totalPrice = document.querySelector("#totalPrice");
+    let _totalPrice = 0;
+    for (let index = 0; index < basket.length; index++) {
+        let id = basket[index].id;
+        let qty = basket[index].qty;
+        let dbProduct = dbProducts.find(p => id === p._id);
+        console.log("162", dbProduct);
+        _totalPrice += dbProduct.price * qty;
+        console.log(_totalPrice);
+    }
+    totalPrice.textContent += _totalPrice;
 }
