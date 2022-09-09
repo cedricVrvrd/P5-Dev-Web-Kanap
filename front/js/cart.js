@@ -16,7 +16,7 @@ console.log("11", dbProducts, "12");
 function getBasketBack() {
     let basket = getBasket();
     console.log("18", basket)
-    let items = document.querySelector("#cart_items");
+    document.querySelector("#cart__items").innerHTML="";
     for (let index = 0; index < basket.length; index++) {
         let id = basket[index].id;
         let qty = basket[index].qty;
@@ -114,10 +114,11 @@ function deleteArticle() {
             basket = basket.filter((p) => p.id  !== deleteArticle.dataset.id || p.couleur !== deleteArticle.dataset.color);
             console.log(basket)
             localStorage.setItem('basket', JSON.stringify(basket))
-            location.reload();
-            
+            // location.reload();
+            getBasketBack();
         })
     }
+    
 }
 
 changeQuantity();
@@ -131,11 +132,13 @@ function changeQuantity() {
         console.log("130", event.target.value, basket[index]);
         basket[index].qty = Number(event.target.value);
         localStorage.setItem('basket', JSON.stringify(basket));
-        setInterval("location.reload()", 1000);
+        setTimeout("location.reload()", 800);
         })
         
     }
 }
+
+
 getQuantity();  
 
 function getQuantity(){
@@ -147,6 +150,9 @@ function getQuantity(){
         console.log("150", resultsQuantity); 
     }
     totalQuantity.textContent += resultsQuantity;
+    // if (totalQuantity == 0){
+    //     resultQuantity.textContent = 0;
+    // }A VERIFIER
 }
 
 getPrice();
@@ -163,4 +169,49 @@ function getPrice(){
         console.log(_totalPrice);
     }
     totalPrice.textContent += _totalPrice;
+     // if (_totalprice == 0){
+    //     totalPrice.textContent = 0;
+    // }A VERIFIER
 }
+let firstName = document.querySelector("#firstName");
+let lastName = document.querySelector("#lastName");
+
+// firstname.setAttribute("pattern", "^[A-Z][A-Za-z\\é\\è\\ê\\-]+$");
+// firstname.setAttribute("pattern", "[A-Z]");
+sendOrder();
+
+function sendOrder(){
+    const submitButton = document.querySelector(".cart__order__form").addEventListener("submit",(e)=>{
+        e.preventDefault();
+        let firstNameErrorMsg = document.querySelector("#firstNameErrorMsg");
+        let lastNameErrorMsg = document.querySelector("#lastNameErrorMsg");
+        const re = new RegExp("[0-9]");
+        if(re.test(firstName.value)){
+            firstNameErrorMsg.textContent = "Votre prénom ne doit pas contenir de chiffres";
+        };
+        if(re.test(lastName.value)){
+            lastNameErrorMsg.textContent = "Votre nom ne doit pas contenir de chiffres";
+        };
+
+
+
+
+
+        // // let firstname = document.querySelector("#firstName");
+        // let firstNameErrorMsg = document.querySelector("#firstNameErrorMsg");
+        // // firstname.setAttribute("pattern", "^[A-Z][A-Za-z\é\è\ê\-]+$");
+        // let valid = document.querySelector('input[name = "prenom"]').reportValidity();
+        // if(!valid){
+        //     firstNameErrorMsg.textContent = "Merci de respecter le format demandé";
+        // }
+
+        // const contact = {
+        //     prenom :  document.querySelector("input#firstName").value,
+        //     nom :  document.querySelector("input#lastName").value,
+        //     adresse :  document.querySelector("input#address").value,
+        //     ville :  document.querySelector("input#city").value,
+        //     email :  document.querySelector("input#email").value,
+        // }
+    })
+}
+
