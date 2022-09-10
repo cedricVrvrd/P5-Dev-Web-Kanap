@@ -114,14 +114,17 @@ function deleteArticle() {
             basket = basket.filter((p) => p.id  !== deleteArticle.dataset.id || p.couleur !== deleteArticle.dataset.color);
             console.log(basket)
             localStorage.setItem('basket', JSON.stringify(basket))
-            // location.reload();
             getBasketBack();
+            getQuantity();
+            getPrice();
         })
     }
     
 }
 
 changeQuantity();
+getQuantity();
+getPrice();
 
 function changeQuantity() {
     let basket = getBasket();
@@ -132,14 +135,12 @@ function changeQuantity() {
         console.log("130", event.target.value, basket[index]);
         basket[index].qty = Number(event.target.value);
         localStorage.setItem('basket', JSON.stringify(basket));
-        setTimeout("location.reload()", 800);
+        getQuantity();
+        getPrice();
         })
-        
     }
 }
-
-
-getQuantity();  
+  
 
 function getQuantity(){
     let basket = getBasket();
@@ -149,13 +150,11 @@ function getQuantity(){
         resultsQuantity += basket[index].qty;
         console.log("150", resultsQuantity); 
     }
-    totalQuantity.textContent += resultsQuantity;
+    totalQuantity.textContent = resultsQuantity;
     // if (totalQuantity == 0){
     //     resultQuantity.textContent = 0;
     // }A VERIFIER
 }
-
-getPrice();
 function getPrice(){
     let basket = getBasket();
     let totalPrice = document.querySelector("#totalPrice");
@@ -168,33 +167,81 @@ function getPrice(){
         _totalPrice += dbProduct.price * qty;
         console.log(_totalPrice);
     }
-    totalPrice.textContent += _totalPrice;
+    totalPrice.textContent = _totalPrice;
      // if (_totalprice == 0){
     //     totalPrice.textContent = 0;
     // }A VERIFIER
 }
-let firstName = document.querySelector("#firstName");
-let lastName = document.querySelector("#lastName");
 
-// firstname.setAttribute("pattern", "^[A-Z][A-Za-z\\é\\è\\ê\\-]+$");
-// firstname.setAttribute("pattern", "[A-Z]");
+
+let firstName = document.querySelector("#firstName");
+let firstNameErrorMsg = document.querySelector("#firstNameErrorMsg");
+let lastName = document.querySelector("#lastName");
+let lastNameErrorMsg = document.querySelector("#lastNameErrorMsg");
+let adresse = document.querySelector("#address");
+let addressErrorMsg = document.querySelector("#addressErrorMsg");
+let ville = document.querySelector("#city");
+let cityErrorMsg = document.querySelector("#cityErrorMsg");
+let eMail = document.querySelector("#email");
+let emailErrorMsg = document.querySelector("#emailErrorMsg");
+let retour = true;
+
 sendOrder();
+function checkForm(){
+    const re = new RegExp("[0-9]");
+    if(re.test(firstName.value)){
+        firstNameErrorMsg.style.display = "block";
+        firstNameErrorMsg.textContent = "Votre prénom ne doit pas contenir de chiffres";
+        retour =  false;
+    }else{
+        retour = true;
+        firstNameErrorMsg.style.display = "none";
+    };
+    if(re.test(lastName.value)){
+        lastNameErrorMsg.style.display = "block";
+        lastNameErrorMsg.textContent = "Votre nom ne doit pas contenir de chiffres";
+        retour = false;
+    }else{
+        retour = true;
+        lastNameErrorMsg.style.display = "none";
+    };
+    if(re.test(adresse.value)){
+        addressErrorMsg.style.display = "block";
+        addressErrorMsg.textContent = "Votre adresse contient des symbôles interdits";
+        retour = false;
+    }else{
+        retour = true;
+        addressErrorMsg.style.display = "none";
+    };
+    if(re.test(ville.value)){
+        cityErrorMsg.style.display = "block";
+        cityErrorMsg.textContent = "Votre nom de ville ne doit pas contenir de symbôles";
+        retour = false;
+    }else{
+        retour = true;
+        cityErrorMsg.style.display = "none";
+    };
+    if(re.test(eMail.value)){
+        emailErrorMsg.style.display = "block";
+        emailErrorMsg.textContent = "Votre email n'est pas valide";
+        retour = false;
+    }else{
+        retour = true;
+        emailErrorMsg.style.display = "none";
+    };
+}
 
 function sendOrder(){
     const submitButton = document.querySelector(".cart__order__form").addEventListener("submit",(e)=>{
         e.preventDefault();
-        let firstNameErrorMsg = document.querySelector("#firstNameErrorMsg");
-        let lastNameErrorMsg = document.querySelector("#lastNameErrorMsg");
-        const re = new RegExp("[0-9]");
-        if(re.test(firstName.value)){
-            firstNameErrorMsg.textContent = "Votre prénom ne doit pas contenir de chiffres";
-        };
-        if(re.test(lastName.value)){
-            lastNameErrorMsg.textContent = "Votre nom ne doit pas contenir de chiffres";
-        };
-
-
-
+    //    on appelle checkform, si chreckform = true, on passe a la suite.
+        checkForm();
+        if(retour === true){
+            console.log("ca marche")
+        }else{
+            console.log("ca ne marche pas")
+        }
+        
 
 
         // // let firstname = document.querySelector("#firstName");
