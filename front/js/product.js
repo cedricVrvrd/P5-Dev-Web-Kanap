@@ -28,6 +28,8 @@ fetch(urlGlobale)
             console.log("erreur de dialogue avec l'API.")
         }
     })
+    .catch(error => {console.log(error);
+    });
 
 const button = document.querySelector("#addToCart")
 

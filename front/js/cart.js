@@ -7,6 +7,7 @@ function getBasket() {
         return JSON.parse(basket)
     }
 }
+let basket = getBasket();
 const res = await fetch("http://localhost:3000/api/products");
 const dbProducts = await res.json();
 console.log("11", dbProducts, "12");
@@ -14,9 +15,8 @@ console.log("11", dbProducts, "12");
 
 
 function getBasketBack() {
-    let basket = getBasket();
     console.log("18", basket)
-    document.querySelector("#cart__items").innerHTML="";
+    document.querySelector("#cart__items").innerHTML = "";
     for (let index = 0; index < basket.length; index++) {
         let id = basket[index].id;
         let qty = basket[index].qty;
@@ -26,7 +26,7 @@ function getBasketBack() {
         console.log("24", dbProduct);
         console.log("33", couleur);
 
-        
+
         // ajout section article
         let article = document.createElement("article");
         document.querySelector("#cart__items").appendChild(article);
@@ -102,16 +102,15 @@ deleteArticle();
 
 
 function deleteArticle() {
-    let basket = getBasket();
     const deleteButton = document.querySelectorAll('.deleteItem');
     console.log("104", deleteButton)
     for (let index = 0; index < deleteButton.length; index++) {
-        deleteButton[index].addEventListener("click", () =>{
+        deleteButton[index].addEventListener("click", () => {
             console.log("107", deleteButton[index])
             let deleteArticle = deleteButton[index].closest('article');
             console.log("112", deleteArticle.dataset.id, deleteArticle.dataset.color, deleteArticle)
             console.log("113", basket)
-            basket = basket.filter((p) => p.id  !== deleteArticle.dataset.id || p.couleur !== deleteArticle.dataset.color);
+            basket = basket.filter((p) => p.id !== deleteArticle.dataset.id || p.couleur !== deleteArticle.dataset.color);
             console.log(basket)
             localStorage.setItem('basket', JSON.stringify(basket))
             getBasketBack();
@@ -119,7 +118,7 @@ function deleteArticle() {
             getPrice();
         })
     }
-    
+
 }
 
 changeQuantity();
@@ -127,36 +126,33 @@ getQuantity();
 getPrice();
 
 function changeQuantity() {
-    let basket = getBasket();
     const quantityButton = document.querySelectorAll('input.itemQuantity');
     console.log("128", quantityButton)
     for (let index = 0; index < quantityButton.length; index++) {
-        quantityButton[index].addEventListener("change", (event) =>{
-        console.log("130", event.target.value, basket[index]);
-        basket[index].qty = Number(event.target.value);
-        localStorage.setItem('basket', JSON.stringify(basket));
-        getQuantity();
-        getPrice();
+        quantityButton[index].addEventListener("change", (event) => {
+            console.log("130", event.target.value, basket[index]);
+            basket[index].qty = Number(event.target.value);
+            localStorage.setItem('basket', JSON.stringify(basket));
+            getQuantity();
+            getPrice();
         })
     }
 }
-  
 
-function getQuantity(){
-    let basket = getBasket();
+
+function getQuantity() {
     let totalQuantity = document.querySelector("#totalQuantity");
     let resultsQuantity = 0;
     for (let index = 0; index < basket.length; index++) {
         resultsQuantity += basket[index].qty;
-        console.log("150", resultsQuantity); 
+        console.log("150", resultsQuantity);
     }
     totalQuantity.textContent = resultsQuantity;
     // if (totalQuantity == 0){
     //     resultQuantity.textContent = 0;
     // }A VERIFIER
 }
-function getPrice(){
-    let basket = getBasket();
+function getPrice() {
     let totalPrice = document.querySelector("#totalPrice");
     let _totalPrice = 0;
     for (let index = 0; index < basket.length; index++) {
@@ -168,7 +164,7 @@ function getPrice(){
         console.log(_totalPrice);
     }
     totalPrice.textContent = _totalPrice;
-     // if (_totalprice == 0){
+    // if (_totalprice == 0){
     //     totalPrice.textContent = 0;
     // }A VERIFIER
 }
@@ -187,78 +183,94 @@ let emailErrorMsg = document.querySelector("#emailErrorMsg");
 let retour = true;
 
 sendOrder();
-function checkForm(){
+function checkForm() {
     const re = new RegExp("[0-9]");
-    if(re.test(firstName.value)){
+    // const reAddress = new RegExp('[^_A-Za-z0-9]');
+    // const reEmail = new RegExp('[\\w-\\.]+@[\\w\\.]+\\.{1}[\\w]+');
+    if (re.test(firstName.value)) {
         firstNameErrorMsg.style.display = "block";
         firstNameErrorMsg.textContent = "Votre prénom ne doit pas contenir de chiffres";
-        retour =  false;
-    }else{
+        retour = false;
+    } else {
         retour = true;
         firstNameErrorMsg.style.display = "none";
     };
-    if(re.test(lastName.value)){
+    if (re.test(lastName.value)) {
         lastNameErrorMsg.style.display = "block";
         lastNameErrorMsg.textContent = "Votre nom ne doit pas contenir de chiffres";
         retour = false;
-    }else{
+    } else {
         retour = true;
         lastNameErrorMsg.style.display = "none";
     };
-    if(re.test(adresse.value)){
+    if (re.test(adresse.value)) {
         addressErrorMsg.style.display = "block";
         addressErrorMsg.textContent = "Votre adresse contient des symbôles interdits";
         retour = false;
-    }else{
+    } else {
         retour = true;
         addressErrorMsg.style.display = "none";
     };
-    if(re.test(ville.value)){
+    if (re.test(ville.value)) {
         cityErrorMsg.style.display = "block";
         cityErrorMsg.textContent = "Votre nom de ville ne doit pas contenir de symbôles";
         retour = false;
-    }else{
+    } else {
         retour = true;
         cityErrorMsg.style.display = "none";
     };
-    if(re.test(eMail.value)){
+    if (re.test(eMail.value)) {
         emailErrorMsg.style.display = "block";
         emailErrorMsg.textContent = "Votre email n'est pas valide";
         retour = false;
-    }else{
+    } else {
         retour = true;
         emailErrorMsg.style.display = "none";
     };
 }
 
-function sendOrder(){
-    const submitButton = document.querySelector(".cart__order__form").addEventListener("submit",(e)=>{
+function sendOrder() {
+    const submitButton = document.querySelector(".cart__order__form").addEventListener("submit", (e) => {
         e.preventDefault();
-    //    on appelle checkform, si chreckform = true, on passe a la suite.
+        //    on appelle checkform, si checkform = true, on passe a la suite.
         checkForm();
-        if(retour === true){
-            console.log("ca marche")
-        }else{
+        if (retour === true && basket.length > 0) {
+            console.log("240 ca marche");
+
+            const contact = {
+                firstName: firstName.value,
+                lastName: lastName.value,
+                address: adresse.value,
+                city: ville.value,
+                email: eMail.value,
+            }
+            console.log("252", contact);
+            let products = [];
+            basket.forEach(product => {
+                products.push(product.id);
+            });
+            console.log("252", products)
+            sendForm(contact, products);
+            console.log("254", contact, products)
+        } else {
             console.log("ca ne marche pas")
         }
-        
 
 
-        // // let firstname = document.querySelector("#firstName");
-        // let firstNameErrorMsg = document.querySelector("#firstNameErrorMsg");
-        // // firstname.setAttribute("pattern", "^[A-Z][A-Za-z\é\è\ê\-]+$");
-        // let valid = document.querySelector('input[name = "prenom"]').reportValidity();
-        // if(!valid){
-        //     firstNameErrorMsg.textContent = "Merci de respecter le format demandé";
-        // }
-
-        // const contact = {
-        //     prenom :  document.querySelector("input#firstName").value,
-        //     nom :  document.querySelector("input#lastName").value,
-        //     adresse :  document.querySelector("input#address").value,
-        //     ville :  document.querySelector("input#city").value,
-        //     email :  document.querySelector("input#email").value,
-        // }
     })
 }
 
+function sendForm(contact, products){
+    fetch("http://localhost:3000/api/products/order", {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({contact, products})
+    })
+        .then(res => res.json())
+        .then(json => console.log("272", json))
+        .catch(error => {
+            console.log("282 erreur lors de l'envoi", error);
+        })
+}
