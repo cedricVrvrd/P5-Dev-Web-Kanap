@@ -52,6 +52,7 @@ button.addEventListener("click", function () {
         couleur: couleur,
     }
     addBasket(product)
+    alert("produit ajouté")
     // contôle type et quantité
     // console.log("le type est " + typeof qty) 
 
