@@ -133,6 +133,12 @@ let emailErrorMsg = document.querySelector("#emailErrorMsg");
 // variable pour checker si formulaire = true
 let retour = true;
 
+
+//--------------------------------------------------
+// au click si formulaire valide + produits dans panier
+// retourne objet contact + tableau string product{ID}
+// si panier vide, affiche panier vide
+//--------------------------------------------------
 sendForm();
 function sendForm() {
     const submitButton = document.querySelector(".cart__order__form").addEventListener("submit", (e) => {
