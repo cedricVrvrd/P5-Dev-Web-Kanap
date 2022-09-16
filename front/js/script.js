@@ -1,28 +1,9 @@
-
-    //--------------------------------------------------
-    //test test test p
-    //--------------------------------------------------
-
-//     <a href="./product.html?id=42">
-//     <article>
-//       <img src=".../product01.jpg" alt="Lorem ipsum dolor sit amet, Kanap name1">
-//       <h3 class="productName">Kanap name1</h3>
-//       <p class="productDescription">Dis enim malesuada risus sapien gravida nulla nisl arcu. Dis enim malesuada risus sapien gravida nulla nisl arcu.</p>
-//     </article>
-//   </a>
-
-//     "colors": ["Blue", "White", "Black"],
-//     "_id": "107fb5b75607497b96722bda5b504926",
-//     "name": "Kanap Sinopé",
-//     "price": 1849,
-//     "imageUrl": "kanap01.jpeg",
-//     "description": "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-//     "altTxt": "Photo d'un canapé bleu, deux places"
-//   },
+// récuperartion de l'adresse API
     const url = "http://localhost:3000/api/products";
 
 //--------------------------------------------------
-// Affichage produits
+// Requête API pour demander l'ensemble des produits, on recupère la reponse et on parcours les
+//  données (data)
 //--------------------------------------------------
    fetch(url)
    .then(res => {
@@ -48,7 +29,8 @@
             console.log("erreur de dialogue avec l'API.")
         }
    })
-//    faire le catch (identique au else)
-//  mettre dans une fonction
+   .catch(error => {
+    console.log("33 erreur lors de l'envoi", error);
+})
 
 

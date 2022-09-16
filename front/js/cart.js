@@ -182,7 +182,7 @@ let eMail = document.querySelector("#email");
 let emailErrorMsg = document.querySelector("#emailErrorMsg");
 let retour = true;
 
-sendOrder();
+sendForm();
 function checkForm() {
     const re = new RegExp("[0-9]");
     // const reAddress = new RegExp('[^_A-Za-z0-9]');
@@ -229,7 +229,7 @@ function checkForm() {
     };
 }
 
-function sendOrder() {
+function sendForm() {
     const submitButton = document.querySelector(".cart__order__form").addEventListener("submit", (e) => {
         e.preventDefault();
         //    on appelle checkform, si checkform = true, on passe a la suite.
@@ -250,8 +250,9 @@ function sendOrder() {
                 products.push(product.id);
             });
             console.log("252", products)
-            sendForm(contact, products);
+            postOrder(contact, products);
             console.log("254", contact, products)
+           
         } else {
             console.log("ca ne marche pas")
         }
@@ -260,7 +261,7 @@ function sendOrder() {
     })
 }
 
-function sendForm(contact, products){
+function postOrder(contact, products){
     fetch("http://localhost:3000/api/products/order", {
         method: "POST",
         headers: {
@@ -269,7 +270,10 @@ function sendForm(contact, products){
         body: JSON.stringify({contact, products})
     })
         .then(res => res.json())
-        .then(json => console.log("272", json))
+        .then(data => {
+            document.location = "../html/confirmation.html?id="+ data.orderId
+        })
+        
         .catch(error => {
             console.log("282 erreur lors de l'envoi", error);
         })
