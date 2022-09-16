@@ -13,16 +13,21 @@ console.log(urlGlobale)
 //--------------------------------------------------
 // RECUPERATION PRODUIT SUIVANT ID
 //--------------------------------------------------
-// on requete Api pour récuprer les élements du produit puis les ajouter 
+// on requete Api pour récuperer les élements du produit puis les ajouter 
 fetch(urlGlobale)
     .then(res => {
         if (res.ok) {
             console.log(res)
             res.json().then(data => {
-                let img = document.querySelector(".item__img").innerHTML = `<img src="${data.imageUrl}" alt="${data.altTxt}">`;
-                let title = document.querySelector("#title").innerHTML = data.name;
-                let price = document.querySelector("#price").innerHTML = data.price;
-                let description = document.querySelector("#description").innerHTML = data.description;
+                // ajout image
+                let _itemImg = document.createElement("img");
+                document.querySelector(".item__img").appendChild(_itemImg);
+                _itemImg.src = data.imageUrl;
+                // ajout titre
+                document.querySelector("#title").textContent = data.name;
+                // ajout prix
+                document.querySelector("#price").innerText = data.price;
+                document.querySelector("#description").innerText = data.description;
                 let colors = document.querySelector("#colors");
                 for (i = 0; i < data.colors.length; i++) {
                     colors.innerHTML += `<option value="${data.colors[i]}">${data.colors[i]}</option>`;
@@ -42,7 +47,7 @@ fetch(urlGlobale)
 //--------------------------------------------------
 // on recupère l'element bouton
 const button = document.querySelector("#addToCart")
-// puis on ajoute le produit dans le panier 
+// puis on ajoute le produit dans le panier au click
 button.addEventListener("click", function () {
     const qty = parseInt(document.querySelector("#quantity").value);
     const couleur = document.querySelector("#colors").value;
@@ -52,7 +57,18 @@ button.addEventListener("click", function () {
         couleur: couleur,
     }
     addBasket(product)
-    alert("produit ajouté")
+    if(qty && couleur){
+        alert("produit ajouté")
+    }
+    else if(qty){
+        alert("selectionnez une couleur")
+    }
+    else if(couleur){
+        alert("selectionnez une quantité")
+    }
+    else{
+        alert("selectionnez une couleur et une quantité")
+    }
     // contôle type et quantité
     // console.log("le type est " + typeof qty) 
 
@@ -61,7 +77,7 @@ button.addEventListener("click", function () {
 
 //--------------------------------------------------
 // on recupére le panier, si il est vide on retourne un tableau, 
-// si quantité != 0 et couleur  alors on push le produit
+// si quantité != 0 et couleur alors on push le produit
 // on sauvegarde la panier
 //--------------------------------------------------
 //Autrement------------------------------------------------
@@ -73,6 +89,7 @@ function addBasket(product) {
         basket = [];
         if (product.qty !== 0 && product.couleur){
             basket.push(product)
+            
         }
         localStorage.setItem('basket', JSON.stringify(basket))
     }
@@ -80,7 +97,7 @@ function addBasket(product) {
         let _product = basket.find(p => p.id === product.id && p.couleur === product.couleur);
         // console.log("70", _product);
         if(_product){
-            _product.qty += product.qty
+            _product.qty += product.qty;
         }
         else{
             if (product.qty !== 0 && product.couleur){
