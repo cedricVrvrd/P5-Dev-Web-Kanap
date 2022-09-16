@@ -1,5 +1,4 @@
-// const urlLocation = window.location.href;
-// console.log(urlLocation)
+// On récupere l'id puis on l'ajoute dans l'url
 
 const str = window.location.href;
 const url = new URL(str);
@@ -8,7 +7,7 @@ let urlGlobale = "http://localhost:3000/api/products/" + idUrl;
 console.log(idUrl);
 console.log(urlGlobale)
 
-
+// 
 fetch(urlGlobale)
     .then(res => {
         if (res.ok) {
@@ -42,7 +41,7 @@ button.addEventListener("click", function () {
         couleur: couleur,
     }
     addBasket(product)
-    console.log("le tye est " + typeof qty)
+    console.log("le type est " + typeof qty)
 
 });
 //--------------------------------------------------
