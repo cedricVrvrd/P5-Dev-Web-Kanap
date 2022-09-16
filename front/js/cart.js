@@ -14,7 +14,7 @@ console.log("11", dbProducts, "12");
 
 
 
-function getBasketBack() {
+function initBasketBack() {
     console.log("18", basket)
     document.querySelector("#cart__items").innerHTML = "";
     for (let index = 0; index < basket.length; index++) {
@@ -95,10 +95,14 @@ function getBasketBack() {
         deleteItem.className = ("deleteItem");
         deleteItem.textContent = "supprimer";
     }
+    deleteArticle();
+    getQuantity();
+    getPrice();
+    changeQuantity();
 };
 
-getBasketBack();
-deleteArticle();
+initBasketBack();
+
 
 
 function deleteArticle() {
@@ -112,18 +116,12 @@ function deleteArticle() {
             console.log("113", basket)
             basket = basket.filter((p) => p.id !== deleteArticle.dataset.id || p.couleur !== deleteArticle.dataset.color);
             console.log(basket)
-            localStorage.setItem('basket', JSON.stringify(basket))
-            getBasketBack();
-            getQuantity();
-            getPrice();
+            localStorage.setItem('basket', JSON.stringify(basket));
+            initBasketBack();
         })
     }
 
 }
-
-changeQuantity();
-getQuantity();
-getPrice();
 
 function changeQuantity() {
     const quantityButton = document.querySelectorAll('input.itemQuantity');
@@ -185,14 +183,12 @@ let retour = true;
 sendForm();
 function checkForm() {
     const re = new RegExp("[0-9]");
-    // const reAddress = new RegExp('[^_A-Za-z0-9]');
-    // const reEmail = new RegExp('[\\w-\\.]+@[\\w\\.]+\\.{1}[\\w]+');
+    const reEmail = new RegExp('[\\w-\\.]+@[\\w\\.]+\\.{1}[\\w]+');
     if (re.test(firstName.value)) {
         firstNameErrorMsg.style.display = "block";
         firstNameErrorMsg.textContent = "Votre prénom ne doit pas contenir de chiffres";
         retour = false;
     } else {
-        retour = true;
         firstNameErrorMsg.style.display = "none";
     };
     if (re.test(lastName.value)) {
@@ -200,31 +196,20 @@ function checkForm() {
         lastNameErrorMsg.textContent = "Votre nom ne doit pas contenir de chiffres";
         retour = false;
     } else {
-        retour = true;
         lastNameErrorMsg.style.display = "none";
-    };
-    if (re.test(adresse.value)) {
-        addressErrorMsg.style.display = "block";
-        addressErrorMsg.textContent = "Votre adresse contient des symbôles interdits";
-        retour = false;
-    } else {
-        retour = true;
-        addressErrorMsg.style.display = "none";
     };
     if (re.test(ville.value)) {
         cityErrorMsg.style.display = "block";
         cityErrorMsg.textContent = "Votre nom de ville ne doit pas contenir de symbôles";
         retour = false;
     } else {
-        retour = true;
         cityErrorMsg.style.display = "none";
     };
-    if (re.test(eMail.value)) {
+    if (!reEmail.test(eMail.value)) {
         emailErrorMsg.style.display = "block";
         emailErrorMsg.textContent = "Votre email n'est pas valide";
         retour = false;
     } else {
-        retour = true;
         emailErrorMsg.style.display = "none";
     };
 }
@@ -261,6 +246,11 @@ function sendForm() {
     })
 }
 
+//--------------------------------------------------
+// Fonction d'envoie du formulaire + 
+// recuperation ID +
+// redirection vers confirmation.html
+//--------------------------------------------------
 function postOrder(contact, products){
     fetch("http://localhost:3000/api/products/order", {
         method: "POST",
