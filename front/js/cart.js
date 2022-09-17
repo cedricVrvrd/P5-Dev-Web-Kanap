@@ -1,8 +1,3 @@
-//--------------------------------------------------
-// fonction pour recuprer le panier, si vide retourne tableau, sinon parse le
-//  panier en données complexes (string vers objet)
-//--------------------------------------------------
-
 function getBasket() {
     let basket = localStorage.getItem('basket');
     if (basket == null) {
@@ -12,30 +7,24 @@ function getBasket() {
         return JSON.parse(basket)
     }
 }
-// variable dans laquelle on récupère le panier pour pouvoir le parcourir po=lus tard
 let basket = getBasket();
-
-// on récupere les produits pour les mettre dans une variable pour pouvoir les parcourir plus tard
 const res = await fetch("http://localhost:3000/api/products");
 const dbProducts = await res.json();
+console.log("11", dbProducts, "12");
 
 
-
-//--------------------------------------------------
-// -------------------------------------------------
-//--------------------------------------------------
-//--------------------------------------------------
-// Fonction pour afficher les élèments de chaque produits dans le panier
-// qui pourront être modifier
-//--------------------------------------------------
 
 function initBasketBack() {
+    console.log("18", basket)
     document.querySelector("#cart__items").innerHTML = "";
     for (let index = 0; index < basket.length; index++) {
         let id = basket[index].id;
         let qty = basket[index].qty;
         let couleur = basket[index].couleur;
+        console.log(id, qty, couleur);
         let dbProduct = dbProducts.find(p => id === p._id);
+        console.log("24", dbProduct);
+        console.log("33", couleur);
 
 
         // ajout section article
@@ -113,82 +102,20 @@ function initBasketBack() {
 };
 
 initBasketBack();
-//--------------------------------------------------
-// -----fin fonction initBasbekBack------------
-//--------------------------------------------------
 
 
 
-// recupration des éléments du formulaire
-let firstName = document.querySelector("#firstName");
-let firstNameErrorMsg = document.querySelector("#firstNameErrorMsg");
-let lastName = document.querySelector("#lastName");
-let lastNameErrorMsg = document.querySelector("#lastNameErrorMsg");
-let adresse = document.querySelector("#address");
-let addressErrorMsg = document.querySelector("#addressErrorMsg");
-let ville = document.querySelector("#city");
-let cityErrorMsg = document.querySelector("#cityErrorMsg");
-let eMail = document.querySelector("#email");
-let emailErrorMsg = document.querySelector("#emailErrorMsg");
-// variable pour checker si formulaire = true
-let retour = true;
-
-
-//--------------------------------------------------
-// au click si formulaire valide + produits dans panier
-// retourne objet contact + tableau string product{ID}
-// si panier vide, affiche panier vide
-//--------------------------------------------------
-sendForm();
-function sendForm() {
-    const submitButton = document.querySelector(".cart__order__form").addEventListener("submit", (e) => {
-        e.preventDefault();
-        //    on appelle checkform, si checkform = true, on passe a la suite.
-        checkForm();
-        if (retour === true && basket.length > 0) {
-
-            const contact = {
-                firstName: firstName.value,
-                lastName: lastName.value,
-                address: adresse.value,
-                city: ville.value,
-                email: eMail.value,
-            }
-
-            let products = [];
-            basket.forEach(product => {
-                products.push(product.id);
-            });
-
-            postOrder(contact, products);
-            console.log(contact, products);
-           
-        } else {
-            alert("le panier est vide")
-        }
-
-
-    })
-}
-
-
-//------------------------------------------------------------------------------
-//  Zone des fonction reutilisées
-//------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
-// -----------------------------------------------------------------------------
-//------------------------------------------------------------------------------
-
-
-//--------------------------------------------------
-// fonction pour retirer un produit
-//--------------------------------------------------
 function deleteArticle() {
     const deleteButton = document.querySelectorAll('.deleteItem');
+    console.log("104", deleteButton)
     for (let index = 0; index < deleteButton.length; index++) {
         deleteButton[index].addEventListener("click", () => {
+            console.log("107", deleteButton[index])
             let deleteArticle = deleteButton[index].closest('article');
+            console.log("112", deleteArticle.dataset.id, deleteArticle.dataset.color, deleteArticle)
+            console.log("113", basket)
             basket = basket.filter((p) => p.id !== deleteArticle.dataset.id || p.couleur !== deleteArticle.dataset.color);
+            console.log(basket)
             localStorage.setItem('basket', JSON.stringify(basket));
             initBasketBack();
         })
@@ -196,13 +123,12 @@ function deleteArticle() {
 
 }
 
-//--------------------------------------------------
-// fonction pour changer la quantité
-//--------------------------------------------------
 function changeQuantity() {
     const quantityButton = document.querySelectorAll('input.itemQuantity');
+    console.log("128", quantityButton)
     for (let index = 0; index < quantityButton.length; index++) {
         quantityButton[index].addEventListener("change", (event) => {
+            console.log("130", event.target.value, basket[index]);
             basket[index].qty = Number(event.target.value);
             localStorage.setItem('basket', JSON.stringify(basket));
             getQuantity();
@@ -211,21 +137,19 @@ function changeQuantity() {
     }
 }
 
-//--------------------------------------------------
-// fonction pour obtenir la quantité totale de produit
-//--------------------------------------------------
+
 function getQuantity() {
     let totalQuantity = document.querySelector("#totalQuantity");
     let resultsQuantity = 0;
     for (let index = 0; index < basket.length; index++) {
         resultsQuantity += basket[index].qty;
+        console.log("150", resultsQuantity);
     }
     totalQuantity.textContent = resultsQuantity;
+    // if (totalQuantity == 0){
+    //     resultQuantity.textContent = 0;
+    // }A VERIFIER
 }
-
-//--------------------------------------------------
-// fonction pour obtnir le prix total
-//--------------------------------------------------
 function getPrice() {
     let totalPrice = document.querySelector("#totalPrice");
     let _totalPrice = 0;
@@ -233,68 +157,148 @@ function getPrice() {
         let id = basket[index].id;
         let qty = basket[index].qty;
         let dbProduct = dbProducts.find(p => id === p._id);
+        console.log("162", dbProduct);
         _totalPrice += dbProduct.price * qty;
+        console.log(_totalPrice);
     }
     totalPrice.textContent = _totalPrice;
+    // if (_totalprice == 0){
+    //     totalPrice.textContent = 0;
+    // }A VERIFIER
 }
+
+
+let firstName = document.querySelector("#firstName")
+let firstNameErrorMsg = document.querySelector("#firstNameErrorMsg");
+let lastName = document.querySelector("#lastName")
+let lastNameErrorMsg = document.querySelector("#lastNameErrorMsg");
+let address = document.querySelector("#address");
+let addressErrorMsg = document.querySelector("#addressErrorMsg");
+let city = document.querySelector("#city");
+let cityErrorMsg = document.querySelector("#cityErrorMsg");
+let email = document.querySelector("#email");
+let emailErrorMsg = document.querySelector("#emailErrorMsg");
+
+const re = new RegExp("[0-9]");
+const reEmail = new RegExp('[\\w-\\.]+@[\\w\\.]+\\.{1}[\\w]+');
+
+
+function checkFirstName(firstName) {
+    let valid = true;
+    if (re.test(firstName.value)) {
+        firstNameErrorMsg.style.display = "block";
+        firstNameErrorMsg.textContent = "Votre prénom ne doit pas contenir de chiffres";
+        valid = false;
+    } else {
+        firstNameErrorMsg.style.display = "none";
+    }
+    return valid;
+};
+
+
+function checkLastName(lastName) {
+    let valid = true;
+    if (re.test(lastName.value)) {
+        lastNameErrorMsg.style.display = "block";
+        lastNameErrorMsg.textContent = "Votre nom ne doit pas contenir de chiffres";
+        valid = false;
+    } else {
+        lastNameErrorMsg.style.display = "none";
+    }
+    return valid;
+};
+function checkAddress(address) {
+    let valid = true;
+    if (!re.test(address.value)) {
+        addressErrorMsg.style.display = "block";
+        addressErrorMsg.textContent = "Votre email n'est pas valide";
+        valid = false;
+    } else {
+        addressErrorMsg.style.display = "none";
+    }
+    return valid;
+};
+function checkCity(city) {
+    let valid = true;
+    if (re.test(city.value)) {
+        cityErrorMsg.style.display = "block";
+        cityErrorMsg.textContent = "Votre nom de ville ne doit pas contenir de symbôles";
+        valid = false;
+    } else {
+        cityErrorMsg.style.display = "none";
+    }
+    return valid;
+};
+
+function checkEmail(email) {
+    let valid = true;
+    if (!reEmail.test(email.value)) {
+        emailErrorMsg.style.display = "block";
+        emailErrorMsg.textContent = "Votre email n'est pas valide";
+        valid = false;
+    } else {
+        emailErrorMsg.style.display = "none";
+    }
+    return valid;
+};
+
+const submitButton = document.querySelector(".cart__order__form").addEventListener("submit", (e) => {
+    e.preventDefault();
+    //    on appelle checkform, si checkform = true, on passe a la suite.
+    if (checkFirstName(firstName) &&
+        checkLastName(lastName) &&
+        checkEmail(email) &&
+        checkAddress(address) &&
+        checkCity(city) &&
+        checkEmail(email) &&
+        basket.length > 0) {
+        console.log("240 ca marche");
+
+        const contact = {
+            firstName: firstName.value,
+            lastName: lastName.value,
+            address: address.value,
+            city: city.value,
+            email: email.value,
+        }
+        console.log("252", contact);
+        let products = [];
+        basket.forEach(product => {
+            products.push(product.id);
+        });
+        console.log("252", products);
+        postOrder(contact, products);
+        console.log("254", contact, products);
+
+    }
+    else if (basket.length < 1) {
+        alert("le panier est vide");
+    }
+    else {
+        console.log("274 erreur");
+    }
+});
 
 //--------------------------------------------------
 // Fonction d'envoie du formulaire + 
 // recuperation ID +
 // redirection vers confirmation.html
 //--------------------------------------------------
-function postOrder(contact, products){
+function postOrder(contact, products) {
     fetch("http://localhost:3000/api/products/order", {
         method: "POST",
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({contact, products})
+        body: JSON.stringify({ contact, products })
     })
         .then(res => res.json())
         .then(data => {
             localStorage.clear();
-            document.location = "../html/confirmation.html?id="+ data.orderId
+            document.location = "../html/confirmation.html?id=" + data.orderId;
         })
-        
+
         .catch(error => {
             console.log("282 erreur lors de l'envoi", error);
         })
-}
-
-//--------------------------------------------------
-// Fonction qui va verifier si formulaire est valide +
-// via regex
-//--------------------------------------------------
-function checkForm() {
-    const re = new RegExp("[0-9]");
-    const reEmail = new RegExp('[\\w-\\.]+@[\\w\\.]+\\.{1}[\\w]+');
-    if (re.test(firstName.value)) {
-        firstNameErrorMsg.style.display = "block";
-        firstNameErrorMsg.textContent = "Votre prénom ne doit pas contenir de chiffres";
-        retour = false;
-    } else {
-        firstNameErrorMsg.style.display = "none";
-    };
-    if (re.test(lastName.value)) {
-        lastNameErrorMsg.style.display = "block";
-        lastNameErrorMsg.textContent = "Votre nom ne doit pas contenir de chiffres";
-        retour = false;
-    } else {
-        lastNameErrorMsg.style.display = "none";
-    };
-    if (re.test(ville.value)) {
-        cityErrorMsg.style.display = "block";
-        cityErrorMsg.textContent = "Votre nom de ville ne doit pas contenir de symbôles";
-        retour = false;
-    } else {
-        cityErrorMsg.style.display = "none";
-    };
-    if (!reEmail.test(eMail.value)) {
-        emailErrorMsg.style.display = "block";
-        emailErrorMsg.textContent = "Votre email n'est pas valide";
-        retour = false;
-    } else {
-        emailErrorMsg.style.display = "none";
-    };
 }
