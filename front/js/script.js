@@ -41,10 +41,12 @@ fetch(url)
         }
         else {
             console.log("erreur de dialogue avec l'API.")
+            alert("Désolé nous rencontrons quelques problèmes techniques, veuillez réessayer plus tard")
         }
     })
     .catch(error => {
         console.log("erreur lors de l'envoi", error);
+        alert("Désolé nous rencontrons quelques problèmes techniques, veuillez réessayer plus tard");
     })
 
 

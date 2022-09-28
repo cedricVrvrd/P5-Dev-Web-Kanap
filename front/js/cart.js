@@ -1,3 +1,6 @@
+//--------------------------------------------------
+// Fonction génèrale pour récupérer le panier
+//--------------------------------------------------
 function getBasket() {
     let basket = localStorage.getItem('basket');
     if (basket == null) {
@@ -6,25 +9,30 @@ function getBasket() {
     else {
         return JSON.parse(basket)
     }
-}
+};
+
+//--------------------------------------------------
+// Variables utiles
+//--------------------------------------------------
 let basket = getBasket();
 const res = await fetch("http://localhost:3000/api/products");
 const dbProducts = await res.json();
-console.log("11", dbProducts, "12");
+console.log("20", dbProducts);
 
-
-
-function initBasketBack() {
-    console.log("18", basket)
+//--------------------------------------------------
+//  Affiche les élements du panier selectionnés par l'utilisateur
+// appelle les fonction getTotalPrice GetTotalQuantity deleteArticle et changeQauntity
+// pour permettre d'interagir sur les elements du panier
+//--------------------------------------------------
+function initBasket() {
+    console.log("26", basket)
     document.querySelector("#cart__items").innerHTML = "";
     for (let index = 0; index < basket.length; index++) {
         let id = basket[index].id;
         let qty = basket[index].qty;
         let couleur = basket[index].couleur;
-        console.log(id, qty, couleur);
         let dbProduct = dbProducts.find(p => id === p._id);
-        console.log("24", dbProduct);
-        console.log("33", couleur);
+        console.log("33", dbProduct);
 
 
         // ajout section article
@@ -95,79 +103,94 @@ function initBasketBack() {
         deleteItem.className = ("deleteItem");
         deleteItem.textContent = "supprimer";
     }
+    // fonction pour retirer article
     deleteArticle();
-    getQuantity();
-    getPrice();
+    // fonction pour obtenir la quantité
+    getTotalQuantity();
+    // fonction pour obtenir le prix total
+    getTotalPrice();
+    // fonction pour changer la quantité
     changeQuantity();
 };
 
-initBasketBack();
+initBasket();
 
-
-
+//--------------------------------------------------
+// Fonction pour supprimer un article, on appelle initBasket pour reinitialiser le panier
+// suivant l'article supprimer
+//--------------------------------------------------
 function deleteArticle() {
     const deleteButton = document.querySelectorAll('.deleteItem');
     console.log("104", deleteButton)
     for (let index = 0; index < deleteButton.length; index++) {
         deleteButton[index].addEventListener("click", () => {
-            console.log("107", deleteButton[index])
+            console.log("124", deleteButton[index])
             let deleteArticle = deleteButton[index].closest('article');
-            console.log("112", deleteArticle.dataset.id, deleteArticle.dataset.color, deleteArticle)
-            console.log("113", basket)
+            console.log("126", deleteArticle.dataset.id, deleteArticle.dataset.color, deleteArticle)
+            console.log("127", basket)
             basket = basket.filter((p) => p.id !== deleteArticle.dataset.id || p.couleur !== deleteArticle.dataset.color);
             console.log(basket)
             localStorage.setItem('basket', JSON.stringify(basket));
-            initBasketBack();
+            initBasket();
         })
     }
 
-}
+};
 
+
+//--------------------------------------------------
+// fonction pour changer la quantité du produit, on appelle
+// la fonction getTotalPrice et getTotalQuantity pour obtenir les nouveaux calculs de ces nombres
+//--------------------------------------------------
 function changeQuantity() {
     const quantityButton = document.querySelectorAll('input.itemQuantity');
-    console.log("128", quantityButton)
+    console.log("142", quantityButton)
     for (let index = 0; index < quantityButton.length; index++) {
         quantityButton[index].addEventListener("change", (event) => {
-            console.log("130", event.target.value, basket[index]);
+            console.log("145", event.target.value, basket[index]);
             basket[index].qty = Number(event.target.value);
             localStorage.setItem('basket', JSON.stringify(basket));
-            getQuantity();
-            getPrice();
+            getTotalQuantity();
+            getTotalPrice();
         })
     }
-}
+};
 
-
-function getQuantity() {
+//--------------------------------------------------
+// fonction pour obtenir la quantité de produit
+//--------------------------------------------------
+function getTotalQuantity() {
     let totalQuantity = document.querySelector("#totalQuantity");
     let resultsQuantity = 0;
     for (let index = 0; index < basket.length; index++) {
         resultsQuantity += basket[index].qty;
-        console.log("150", resultsQuantity);
+        console.log("161", resultsQuantity);
     }
     totalQuantity.textContent = resultsQuantity;
-    // if (totalQuantity == 0){
-    //     resultQuantity.textContent = 0;
-    // }A VERIFIER
-}
-function getPrice() {
+};
+
+
+//--------------------------------------------------
+// Fonction pour obtenir le prix total de la commande
+//--------------------------------------------------
+function getTotalPrice() {
     let totalPrice = document.querySelector("#totalPrice");
     let _totalPrice = 0;
     for (let index = 0; index < basket.length; index++) {
         let id = basket[index].id;
         let qty = basket[index].qty;
         let dbProduct = dbProducts.find(p => id === p._id);
-        console.log("162", dbProduct);
+        console.log("175", dbProduct);
         _totalPrice += dbProduct.price * qty;
-        console.log(_totalPrice);
+        console.log("177", _totalPrice);
     }
     totalPrice.textContent = _totalPrice;
-    // if (_totalprice == 0){
-    //     totalPrice.textContent = 0;
-    // }A VERIFIER
-}
+};
 
-
+//--------------------------------------------------
+// On récupère les elements du formulaire pour les placer dans des variables ainsi que 
+// les messages d'erreur déjà dans le html
+//--------------------------------------------------
 let firstName = document.querySelector("#firstName")
 let firstNameErrorMsg = document.querySelector("#firstNameErrorMsg");
 let lastName = document.querySelector("#lastName")
@@ -179,10 +202,14 @@ let cityErrorMsg = document.querySelector("#cityErrorMsg");
 let email = document.querySelector("#email");
 let emailErrorMsg = document.querySelector("#emailErrorMsg");
 
+
+//--------------------------------------------------
+// création des regex
+//--------------------------------------------------
 const re = new RegExp("[0-9]");
 const reEmail = new RegExp('[\\w-\\.]+@[\\w\\.]+\\.{1}[\\w]+');
 
-
+// fonction pour verifier le prenom, return true si ok
 function checkFirstName(firstName) {
     let valid = true;
     if (re.test(firstName.value)) {
@@ -195,7 +222,7 @@ function checkFirstName(firstName) {
     return valid;
 };
 
-
+// fonction pour verifier le nom, return true si ok
 function checkLastName(lastName) {
     let valid = true;
     if (re.test(lastName.value)) {
@@ -207,6 +234,8 @@ function checkLastName(lastName) {
     }
     return valid;
 };
+
+// fonction pour verifier l'adresse, return true si ok
 function checkAddress(address) {
     let valid = true;
     if (!re.test(address.value)) {
@@ -218,6 +247,8 @@ function checkAddress(address) {
     }
     return valid;
 };
+
+// fonction pour verifier l'adresse, return true si ok
 function checkCity(city) {
     let valid = true;
     if (re.test(city.value)) {
@@ -230,6 +261,7 @@ function checkCity(city) {
     return valid;
 };
 
+// fonction pour verifier l'email, return true si ok
 function checkEmail(email) {
     let valid = true;
     if (!reEmail.test(email.value)) {
@@ -242,9 +274,16 @@ function checkEmail(email) {
     return valid;
 };
 
+
+//--------------------------------------------------
+// Au clic sur le bouton valider, si tous les éléments du formulaire ok et que au moins un élément
+// dans le panier , alors la commande est validée
+// on envoie les données du client sous forme d'un objet
+// puis les produits sous forme de tableau de string
+//  sinon envoie d'un message à l'utilisateur
+//--------------------------------------------------
 const submitButton = document.querySelector(".cart__order__form").addEventListener("submit", (e) => {
     e.preventDefault();
-    //    on appelle checkform, si checkform = true, on passe a la suite.
     if (checkFirstName(firstName) &&
         checkLastName(lastName) &&
         checkEmail(email) &&
@@ -253,7 +292,7 @@ const submitButton = document.querySelector(".cart__order__form").addEventListen
         checkEmail(email) &&
         basket.length > 0) {
         console.log("240 ca marche");
-
+        //  creation de l'objet contact
         const contact = {
             firstName: firstName.value,
             lastName: lastName.value,
@@ -262,6 +301,7 @@ const submitButton = document.querySelector(".cart__order__form").addEventListen
             email: email.value,
         }
         console.log("252", contact);
+        // on crée un tableau dans lequel on envoie les id du produits
         let products = [];
         basket.forEach(product => {
             products.push(product.id);
@@ -300,5 +340,6 @@ function postOrder(contact, products) {
 
         .catch(error => {
             console.log("282 erreur lors de l'envoi", error);
+            alert("erreur lors de l'envoi, veuillez renouveler votre commande")
         })
-}
+};

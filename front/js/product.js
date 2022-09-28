@@ -8,7 +8,7 @@ const url = new URL(str);
 let idUrl = url.searchParams.get("id");
 let urlGlobale = "http://localhost:3000/api/products/" + idUrl;
 console.log(idUrl);
-console.log(urlGlobale)
+console.log(urlGlobale);
 
 //--------------------------------------------------
 // RECUPERATION PRODUIT SUIVANT ID
@@ -36,9 +36,12 @@ fetch(urlGlobale)
         }
         else {
             console.log("erreur de dialogue avec l'API.")
+            alert("Désolé nous rencontrons quelques problèmes techniques, veuillez réessayer plus tard");
         }
     })
-    .catch(error => {console.log(error);
+    .catch(error => {
+        console.log(error);
+        alert("Désolé nous rencontrons quelques problèmes techniques, veuillez réessayer plus tard");
     });
 
 
@@ -57,20 +60,20 @@ button.addEventListener("click", function () {
         couleur: couleur,
     }
     addBasket(product)
-    if(qty && couleur){
+    if (qty && couleur) {
         alert("produit ajouté")
     }
-    else if(qty){
+    else if (qty) {
         alert("selectionnez une couleur")
     }
-    else if(couleur){
+    else if (couleur) {
         alert("selectionnez une quantité")
     }
-    else{
+    else {
         alert("selectionnez une couleur et une quantité")
     }
     // contôle type et quantité
-    // console.log("le type est " + typeof qty) 
+    console.log("le type est " + typeof qty)
 
 });
 
@@ -87,23 +90,23 @@ function addBasket(product) {
     let basket = JSON.parse(localStorage.getItem('basket'));
     if (basket == null) {
         basket = [];
-        if (product.qty !== 0 && product.couleur){
+        if (product.qty !== 0 && product.couleur) {
             basket.push(product)
-            
+
         }
         localStorage.setItem('basket', JSON.stringify(basket))
     }
     else {
         let _product = basket.find(p => p.id === product.id && p.couleur === product.couleur);
-        // console.log("70", _product);
-        if(_product){
+        console.log("70", _product);
+        if (_product) {
             _product.qty += product.qty;
         }
-        else{
-            if (product.qty !== 0 && product.couleur){
+        else {
+            if (product.qty !== 0 && product.couleur) {
                 basket.push(product)
             }
         }
         localStorage.setItem('basket', JSON.stringify(basket))
     }
-}
+};
