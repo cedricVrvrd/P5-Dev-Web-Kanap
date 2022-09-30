@@ -59,21 +59,12 @@ button.addEventListener("click", function () {
         qty: qty,
         couleur: couleur,
     }
-    addBasket(product)
-    if (qty && couleur) {
-        alert("produit ajouté")
+    if (qty < 100) {
+        addBasket(product)
+        console.log("le type est " + typeof qty)
+    } else {
+        alert("pas + de 100")
     }
-    else if (qty) {
-        alert("selectionnez une couleur")
-    }
-    else if (couleur) {
-        alert("selectionnez une quantité")
-    }
-    else {
-        alert("selectionnez une couleur et une quantité")
-    }
-    // contôle type et quantité
-    console.log("le type est " + typeof qty)
 
 });
 
@@ -87,26 +78,51 @@ button.addEventListener("click", function () {
 // si produit dans le panier, on tri le panier, si produit identiques = ajuste la quantité, si pas de produit identique, on push
 //--------------------------------------------------
 function addBasket(product) {
-    let basket = JSON.parse(localStorage.getItem('basket'));
-    if (basket == null) {
-        basket = [];
-        if (product.qty !== 0 && product.couleur) {
-            basket.push(product)
-
+    if (product.qty === 0 || product.couleur === "") {
+        alert("veuillir choisir une quantité et une couleur")
+    } else {
+        // initialisation du panier
+        let basket = JSON.parse(localStorage.getItem('basket'));
+        if (basket === null) {
+            basket = [];
         }
-        localStorage.setItem('basket', JSON.stringify(basket))
-    }
-    else {
         let _product = basket.find(p => p.id === product.id && p.couleur === product.couleur);
         console.log("70", _product);
         if (_product) {
             _product.qty += product.qty;
-        }
-        else {
-            if (product.qty !== 0 && product.couleur) {
-                basket.push(product)
+            if (_product.qty > 100) {
+                _product.qty = 100;
+                alert("limité à 100 articles par commande, vérifier votre panier")
+            } else {
+                alert("quantité modifiée");
             }
         }
+        else {
+                basket.push(product)
+                alert("produit ajouté");
+        }
         localStorage.setItem('basket', JSON.stringify(basket))
+
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 };

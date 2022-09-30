@@ -21,7 +21,7 @@ console.log("20", dbProducts);
 
 //--------------------------------------------------
 //  Affiche les élements du panier selectionnés par l'utilisateur
-// appelle les fonction getTotalPrice GetTotalQuantity deleteArticle et changeQauntity
+// appelle les fonction getTotalPrice GetTotalQuantity deleteArticle et changeQuantity
 // pour permettre d'interagir sur les elements du panier
 //--------------------------------------------------
 function initBasket() {
@@ -282,15 +282,20 @@ function checkEmail(email) {
 // puis les produits sous forme de tableau de string
 //  sinon envoie d'un message à l'utilisateur
 //--------------------------------------------------
+
+
+
 const submitButton = document.querySelector(".cart__order__form").addEventListener("submit", (e) => {
     e.preventDefault();
+    // console.log(checkBasketQuantity(basket))
     if (checkFirstName(firstName) &&
         checkLastName(lastName) &&
         checkEmail(email) &&
         checkAddress(address) &&
         checkCity(city) &&
         checkEmail(email) &&
-        basket.length > 0) {
+        checkBasketQuantity(basket) &&
+        basket.length <= 1) {
         console.log("240 ca marche");
         //  creation de l'objet contact
         const contact = {
@@ -334,12 +339,23 @@ function postOrder(contact, products) {
     })
         .then(res => res.json())
         .then(data => {
-            localStorage.clear();
-            document.location = "../html/confirmation.html?id=" + data.orderId;
+            // localStorage.clear();
+            // document.location = "../html/confirmation.html?id=" + data.orderId;
+            console.log("ok")
         })
 
         .catch(error => {
             console.log("282 erreur lors de l'envoi", error);
             alert("erreur lors de l'envoi, veuillez renouveler votre commande")
         })
+};
+
+function checkBasketQuantity(basket){
+    for (let index = 0; index < basket.length; index++) {
+        if(basket[index].qty < 1 || basket[index].qty > 100){
+            alert("la quantité doit être compris entre 1 et 100")
+            return false;
+        }
+    }
+    return true
 };

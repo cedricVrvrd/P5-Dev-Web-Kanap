@@ -21,21 +21,21 @@ fetch(url)
                     // section article
                     let sectionArticle = document.createElement("article");
                     link.appendChild(sectionArticle);
-                    // image et alt
-                    let productImg = document.createElement("img");
-                    sectionArticle.appendChild(productImg);
-                    productImg.src = data[index].imageUrl;
-                    productImg.alt = data[index].altTxt;
-                    //  nom du produit
-                    let productName = document.createElement("h3");
-                    sectionArticle.appendChild(productName);
-                    productName.className = "productName";
-                    productName.textContent = data[index].name;
-                    //  description du prodruit
-                    let productDescription = document.createElement("p");
-                    sectionArticle.appendChild(productDescription);
-                    productDescription.className = "productDescription";
-                    productDescription.textContent = data[index].description;
+                        // image et alt
+                        let productImg = document.createElement("img");
+                        sectionArticle.appendChild(productImg);
+                        productImg.src = data[index].imageUrl;
+                        productImg.alt = data[index].altTxt;
+                        //  nom du produit
+                        let productName = document.createElement("h3");
+                        sectionArticle.appendChild(productName);
+                        productName.className = "productName";
+                        productName.textContent = data[index].name;
+                        //  description du prodruit
+                        let productDescription = document.createElement("p");
+                        sectionArticle.appendChild(productDescription);
+                        productDescription.className = "productDescription";
+                        productDescription.textContent = data[index].description;
                 }
             })
         }
