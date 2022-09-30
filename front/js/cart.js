@@ -346,14 +346,14 @@ function postOrder(contact, products) {
 
         .catch(error => {
             console.log("282 erreur lors de l'envoi", error);
-            alert("erreur lors de l'envoi, veuillez renouveler votre commande")
+            alert("Erreur lors de l'envoi, veuillez renouveler votre commande")
         })
 };
 
 function checkBasketQuantity(basket){
     for (let index = 0; index < basket.length; index++) {
         if(basket[index].qty < 1 || basket[index].qty > 100){
-            alert("la quantité doit être compris entre 1 et 100")
+            alert("Veuillez vérifier la quantité de chaque article")
             return false;
         }
     }

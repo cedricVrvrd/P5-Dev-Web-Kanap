@@ -63,7 +63,7 @@ button.addEventListener("click", function () {
         addBasket(product)
         console.log("le type est " + typeof qty)
     } else {
-        alert("pas + de 100")
+        alert("Vous ne pouvez pas choisir plus de 100 produits par réfèrences")
     }
 
 });
@@ -79,7 +79,7 @@ button.addEventListener("click", function () {
 //--------------------------------------------------
 function addBasket(product) {
     if (product.qty === 0 || product.couleur === "") {
-        alert("veuillir choisir une quantité et une couleur")
+        alert("Veuillez choisir une quantité et une couleur")
     } else {
         // initialisation du panier
         let basket = JSON.parse(localStorage.getItem('basket'));
@@ -92,14 +92,14 @@ function addBasket(product) {
             _product.qty += product.qty;
             if (_product.qty > 100) {
                 _product.qty = 100;
-                alert("limité à 100 articles par commande, vérifier votre panier")
+                alert("Limité à 100 articles par commande, vérifier votre panier")
             } else {
-                alert("quantité modifiée");
+                alert("La quantité a été modifiée");
             }
         }
         else {
                 basket.push(product)
-                alert("produit ajouté");
+                alert("Produit ajouté");
         }
         localStorage.setItem('basket', JSON.stringify(basket))
 
