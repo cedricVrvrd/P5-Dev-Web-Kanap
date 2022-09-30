@@ -287,7 +287,6 @@ function checkEmail(email) {
 
 const submitButton = document.querySelector(".cart__order__form").addEventListener("submit", (e) => {
     e.preventDefault();
-    // console.log(checkBasketQuantity(basket))
     if (checkFirstName(firstName) &&
         checkLastName(lastName) &&
         checkEmail(email) &&
@@ -295,7 +294,7 @@ const submitButton = document.querySelector(".cart__order__form").addEventListen
         checkCity(city) &&
         checkEmail(email) &&
         checkBasketQuantity(basket) &&
-        basket.length <= 1) {
+        basket.length >= 1) {
         console.log("240 ca marche");
         //  creation de l'objet contact
         const contact = {
