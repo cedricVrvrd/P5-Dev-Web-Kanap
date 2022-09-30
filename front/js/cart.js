@@ -338,8 +338,8 @@ function postOrder(contact, products) {
     })
         .then(res => res.json())
         .then(data => {
-            // localStorage.clear();
-            // document.location = "../html/confirmation.html?id=" + data.orderId;
+            localStorage.clear();
+            document.location = "../html/confirmation.html?id=" + data.orderId;
             console.log("ok")
         })
 
