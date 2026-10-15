@@ -1,5 +1,12 @@
 # Kanap #
 
+**Démo en ligne / Live demo :** https://cedricvrvrd.github.io/P5-Dev-Web-Kanap/
+
+> **FR —** La démo publiée sur GitHub Pages est une version statique : les produits sont lus dans `front/data/products.json` au lieu de l'API, et la commande est simulée (le numéro est généré dans le navigateur, rien n'est envoyé ni enregistré). Le back-end Express d'origine reste dans `back/` et fonctionne toujours en local (voir ci-dessous).
+>
+> **EN —** The GitHub Pages demo is a static version: products are read from `front/data/products.json` instead of the API, and checkout is simulated (the order number is generated in the browser; nothing is sent or stored). The original Express back end is still in `back/` and runs locally as described below.
+
+
 This is the front end and back end server for Project 5 of the Web Developer path.
 
 ### Back end Prerequisites ###

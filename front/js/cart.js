@@ -15,7 +15,8 @@ function getBasket() {
 // Variables utiles
 //--------------------------------------------------
 let basket = getBasket();
-const res = await fetch("http://localhost:3000/api/products");
+// Version statique (GitHub Pages) : produits lus dans un fichier JSON
+const res = await fetch("../data/products.json");
 const dbProducts = await res.json();
 console.log("20", dbProducts);
 
@@ -328,25 +329,13 @@ const submitButton = document.querySelector(".cart__order__form").addEventListen
 // recuperation ID +
 // redirection vers confirmation.html
 //--------------------------------------------------
+// Version statique (GitHub Pages) : il n'y a pas de serveur pour recevoir
+// la commande. On génère le numéro de commande dans le navigateur,
+// comme le faisait l'API (uuid), et rien n'est envoyé ni enregistré.
 function postOrder(contact, products) {
-    fetch("http://localhost:3000/api/products/order", {
-        method: "POST",
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ contact, products })
-    })
-        .then(res => res.json())
-        .then(data => {
-            localStorage.clear();
-            document.location = "../html/confirmation.html?id=" + data.orderId;
-            console.log("ok")
-        })
-
-        .catch(error => {
-            console.log("282 erreur lors de l'envoi", error);
-            alert("Erreur lors de l'envoi, veuillez renouveler votre commande")
-        })
+    const orderId = crypto.randomUUID();
+    localStorage.clear();
+    document.location = "../html/confirmation.html?id=" + orderId;
 };
 
 function checkBasketQuantity(basket){

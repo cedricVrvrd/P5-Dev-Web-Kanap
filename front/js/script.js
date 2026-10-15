@@ -1,5 +1,6 @@
-// récuperartion de l'adresse API
-const url = "http://localhost:3000/api/products";
+// Version statique (GitHub Pages) : les produits sont lus dans un fichier JSON
+// au lieu de l'API Express (voir README)
+const url = "../data/products.json";
 
 
 

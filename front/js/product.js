@@ -6,7 +6,9 @@
 const str = window.location.href;
 const url = new URL(str);
 let idUrl = url.searchParams.get("id");
-let urlGlobale = "http://localhost:3000/api/products/" + idUrl;
+// Version statique (GitHub Pages) : on lit la liste des produits
+// puis on cherche le produit correspondant à l'id
+let urlGlobale = "../data/products.json";
 console.log(idUrl);
 console.log(urlGlobale);
 
@@ -18,11 +20,18 @@ fetch(urlGlobale)
     .then(res => {
         if (res.ok) {
             console.log(res)
-            res.json().then(data => {
+            res.json().then(products => {
+                const data = products.find(p => p._id === idUrl);
+                if (!data) {
+                    alert("Ce produit n'existe pas");
+                    document.location = "index.html";
+                    return;
+                }
                 // ajout image
                 let _itemImg = document.createElement("img");
                 document.querySelector(".item__img").appendChild(_itemImg);
                 _itemImg.src = data.imageUrl;
+                _itemImg.alt = data.altTxt;
                 // ajout titre
                 document.querySelector("#title").textContent = data.name;
                 // ajout prix
